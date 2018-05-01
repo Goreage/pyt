@@ -1,5 +1,8 @@
 from .base_test_case import BaseTestCase
-from pyt.node_types import EntryOrExitNode, Node
+from pyt.node_types import (
+    EntryOrExitNode,
+    Node
+)
 
 
 class CFGGeneralTest(BaseTestCase):
@@ -215,35 +218,55 @@ class CFGTryTest(BaseTestCase):
         print_good = 18
         _exit = 19
 
-        self.assertInCfg([self.connected(entry, try_),
+        self.assertInCfg([
+            self.connected(entry, try_),
 
-                          self.connected(try_, try_body),
+            self.connected(try_, try_body),
 
-                          self.connected(try_body, print_a5),
+            self.connected(try_body, print_a5),
 
-                          self.connected(print_a5, except_im),
-                          self.connected(print_a5, save_node),
-                          self.connected(print_a5, print_good),
+            self.connected(print_a5, except_im),
+            self.connected(print_a5, save_node),
+            self.connected(print_a5, print_good),
 
-                          self.connected(except_im, except_im_body_1),
+            self.connected(except_im, except_im_body_1),
 
-                          self.connected(except_im_body_1, value_equal_call_2),
-                          self.connected(value_equal_call_2, print_wagyu),
+            self.connected(except_im_body_1, value_equal_call_2),
+            self.connected(value_equal_call_2, print_wagyu),
 
-                          self.connected(print_wagyu, print_good),
+            self.connected(print_wagyu, print_good),
 
-                          self.connected(save_node, assign_to_temp),
-                          self.connected(assign_to_temp, assign_from_temp),
-                          self.connected(assign_from_temp, function_entry),
-                          self.connected(function_entry, ret_of_subprocess_call),
-                          self.connected(ret_of_subprocess_call, ret_does_this_kill_us_equal_call_5),
-                          self.connected(ret_does_this_kill_us_equal_call_5, function_exit),
-                          self.connected(function_exit, restore_node),
-                          self.connected(restore_node, return_handler),
-                          self.connected(return_handler, print_so),
+            self.connected(save_node, assign_to_temp),
+            self.connected(assign_to_temp, assign_from_temp),
+            self.connected(assign_from_temp, function_entry),
+            self.connected(function_entry, ret_of_subprocess_call),
+            self.connected(ret_of_subprocess_call, ret_does_this_kill_us_equal_call_5),
+            self.connected(ret_does_this_kill_us_equal_call_5, function_exit),
+            self.connected(function_exit, restore_node),
+            self.connected(restore_node, return_handler),
+            self.connected(return_handler, print_so),
 
-                          self.connected(print_so, print_good),
-                          self.connected(print_good, _exit)])
+            self.connected(print_so, print_good),
+            self.connected(print_good, _exit)
+        ])
+
+    def test_orelse_with_no_variables_to_save(self):
+        self.cfg_create_from_file('examples/example_inputs/try_orelse_with_no_variables_to_save.py')
+
+        self.nodes = self.cfg_list_to_dict(self.cfg.nodes)
+        self.assert_length(self.cfg.nodes, expected_length=15)
+
+
+        # Let us see what the nodes are for debugging purposes, delete me after the test is done
+        for i, node in enumerate(self.cfg.nodes):
+            print(f'node {i} is {node}')
+
+        # TODO: Give the integers names
+
+        self.assertInCfg([
+            # TODO: Fill me in with self.connected() calls just like above
+        ])
+
 
     def test_final(self):
         self.cfg_create_from_file('examples/example_inputs/try_final.py')
